@@ -9,6 +9,9 @@ namespace XUnitTestProject
 {
     public class StudentServiceTest
     {
+        /// <summary>
+        /// Test for creating ad valid StudentService.
+        /// </summary>
         [Fact]
         public void CreateStudentServicevalidRepositoty()
         {
@@ -19,6 +22,9 @@ namespace XUnitTestProject
             Assert.True(service is StudentService);
         }
 
+        /// <summary>
+        /// Test for trowing exception if the repository is null.
+        /// </summary>
         [Fact]
         public void CreateStudentServiceRepositoryIsNullThrowsException()
         {
@@ -28,6 +34,16 @@ namespace XUnitTestProject
             Assert.Null(service);
         }
 
+        /// <summary>
+        /// Test for adding a valid student to the repository.
+        /// The student email is optional.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="address"></param>
+        /// <param name="zipcode"></param>
+        /// <param name="city"></param>
+        /// <param name="email"></param>
         [Theory]
         [InlineData(1, "Name", "Address", 1234, "City", null)]
         [InlineData(1, "Name", "Address", 1234, "City", "abc@mail.com")]
