@@ -69,7 +69,11 @@ namespace Core.Services
 
         public void UpdateStudent(Student s)
         {
-            throw new System.NotImplementedException();
+            if (s == null)
+                throw new ArgumentException("Student is missing");
+            if (studentRepo.GetById(s.Id) == null)
+                throw new ArgumentException("Student does not exist");
+            studentRepo.Update(s);
         }
     }
 }

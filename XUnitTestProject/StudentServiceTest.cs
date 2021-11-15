@@ -111,5 +111,49 @@ namespace XUnitTestProject
             Assert.Equal("Student is missing", ex.Message);
             mock.Verify(x => x.Add(null), Times.Never);
         }
+
+        [Fact]
+        public void UpdateStudent_ExistingStudent()
+        {
+            Student s = new Student(1, "Aname", "AnAddress", 1234, "ACity");
+            
+            Mock<IStudentRepository> mock = new Mock<IStudentRepository>();
+            mock.Setup(x => x.GetById(s.Id)).Returns(s);
+
+            IStudentService service = new StudentService(mock.Object);
+            service.UpdateStudent(s);
+
+            mock.Verify(repo => repo.GetById(s.Id), Times.Once());
+            mock.Verify(repo => repo.Update(s), Times.Once());
+        }
+
+        [Fact]
+        public void UpdateStudent_NonExistingStudent_ThrowsException()
+        {
+            Student s = new Student(1, "Aname", "AnAddress", 1234, "ACity");
+            
+            Mock<IStudentRepository> mock = new Mock<IStudentRepository>();
+            mock.Setup(x => x.GetById(s.Id)).Returns(() => null);
+
+            IStudentService service = new StudentService(mock.Object);
+            
+            var ex = Assert.Throws<ArgumentException>(() =>service.UpdateStudent(s));
+            
+            Assert.Equal("Student does not exist", ex.Message);
+            mock.Verify(repo => repo.GetById(s.Id), Times.Once());
+            mock.Verify(repo => repo.Update(s), Times.Never());
+        }
+
+        [Fact]
+        public void UpdateStudent_StudentIsNull_ThrowsException()
+        {
+            Mock<IStudentRepository> mock = new Mock<IStudentRepository>();
+            IStudentService service = new StudentService(mock.Object);
+            
+            var ex = Assert.Throws<ArgumentException>(() => service.UpdateStudent(null));
+
+            Assert.Equal("Student is missing", ex.Message);           
+            mock.Verify(repo => repo.Update(null), Times.Never());
+        }
     }
 }
